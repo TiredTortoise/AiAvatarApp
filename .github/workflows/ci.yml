@@ -1,0 +1,106 @@
+# Minimal CI for the AiAvatarApp scaffold.
+#
+# What this does:
+#   1. Activates the Unity license (Personal/Plus/Pro — see README for setup).
+#   2. Runs the EditMode test assembly to catch compile errors + the trivial
+#      scaffold smoke test.
+#   3. Runs a no-op Android build *verification* pass so we catch IL2CPP /
+#      asmdef / URP issues that only surface at build time.
+#
+# Notes for future agents:
+#   - If you add a new asmdef and CI starts failing with
+#     "Failed to activate license", the GameCI license cache may need a bump.
+#     Purging the `actions-cache` for this repo or rotating the secret resolves it.
+#   - The Unity version is pinned to 6000.3.13f1 to match what developers run
+#     locally. When bumping Unity, update *both* this file AND the README.
+#   - This workflow assumes a `UNITY_LICENSE` repo secret is configured. See
+#     README section "CI setup" for how to generate + add it.
+#   - Cross-reference: design doc Section 14 (testing strategy) and task T26.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UNITY_VERSION: "6000.3.13f1"
+
+jobs:
+  editmode-tests:
+    name: EditMode tests (${{ matrix.testMode }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        testMode: [EditMode]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ matrix.testMode }}-${{ env.UNITY_VERSION }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ matrix.testMode }}-${{ env.UNITY_VERSION }}-
+            Library-${{ matrix.testMode }}-
+            Library-
+
+      - name: Run ${{ matrix.testMode }} tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: ${{ env.UNITY_VERSION }}
+          testMode: ${{ matrix.testMode }}
+          artifactsPath: ${{ matrix.testMode }}-artifacts
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: ${{ matrix.testMode }} results
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.testMode }}-artifacts
+          path: ${{ matrix.testMode }}-artifacts
+
+  android-build-verify:
+    name: Android build verification
+    runs-on: ubuntu-latest
+    needs: editmode-tests
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-Android-${{ env.UNITY_VERSION }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-Android-${{ env.UNITY_VERSION }}-
+            Library-Android-
+            Library-
+
+      - name: Build Android player (verification only)
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: ${{ env.UNITY_VERSION }}
+          targetPlatform: Android
+          buildMethod: ""
+          allowDirtyBuild: true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-build
+          path: build
