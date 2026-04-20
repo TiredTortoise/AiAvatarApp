@@ -33,6 +33,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# New GitHub repos default GITHUB_TOKEN to read-only. unity-test-runner publishes
+# a Check annotation on the commit, which needs `checks: write`; without it the
+# action fails with "Resource not accessible by integration" even though tests
+# ran. `contents: read` is the default but listed explicitly so setting a
+# permissions block doesn't silently strip it.
+permissions:
+  contents: read
+  checks: write
+
 env:
   UNITY_VERSION: "6000.3.13f1"
 
