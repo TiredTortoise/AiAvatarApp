@@ -13,14 +13,12 @@
 #     Purging the `actions-cache` for this repo or rotating the secret resolves it.
 #   - The Unity version is pinned to 6000.3.13f1 to match what developers run
 #     locally. When bumping Unity, update *both* this file AND the README.
-#   - This workflow assumes three repo secrets are configured — see README
-#     section "CI setup" for how to add them:
-#       UNITY_EMAIL        Unity account email
-#       UNITY_PASSWORD     Unity account password
-#       UNITY_SERIAL       Only needed for Plus/Pro. Leave unset for Personal.
-#     GameCI activates a Personal license on-the-fly using email+password when
-#     UNITY_SERIAL is absent. The old `.alf`/`.ulf` flow no longer works for
-#     Personal since Unity removed blank-serial activation at license.unity3d.com.
+#   - This workflow assumes one repo secret is configured — see README
+#     section "CI setup" for how to add it:
+#       UNITY_LICENSE      Full contents of Unity_lic.ulf, activated via Hub
+#     GameCI v4 activates Personal licenses from a .ulf file, not from
+#     email+password. The file is generated on your machine the first time
+#     Unity Hub signs in with a Personal entitlement.
 #   - Cross-reference: design doc Section 14 (testing strategy) and task T26.
 
 name: CI
@@ -63,9 +61,7 @@ jobs:
       - name: Run ${{ matrix.testMode }} tests
         uses: game-ci/unity-test-runner@v4
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           unityVersion: ${{ env.UNITY_VERSION }}
           testMode: ${{ matrix.testMode }}
@@ -100,9 +96,7 @@ jobs:
       - name: Build Android player (verification only)
         uses: game-ci/unity-builder@v4
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           unityVersion: ${{ env.UNITY_VERSION }}
           targetPlatform: Android
