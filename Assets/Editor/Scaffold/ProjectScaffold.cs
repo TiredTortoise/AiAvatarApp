@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -108,18 +107,11 @@ namespace AiAvatarApp.EditorScaffold
             var avatarRoot = new GameObject("AvatarRoot");
             avatarRoot.transform.position = Vector3.zero;
 
-            // Diagnostic 3D cube so we can verify the camera renders *something*. If this shows
-            // at runtime but UI doesn't, the problem is Canvas/UGUI-specific. T17 will delete it.
-            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.name = "DiagCube";
-            cube.transform.position = new Vector3(0f, 1f, 3f);
-
-            new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-
             // Construct with typeof(RectTransform) explicitly, then AddComponent<Canvas>() after.
             // A root ScreenSpaceOverlay Canvas *drives* its RectTransform (scale/anchors) to match
             // screen size at runtime — so whatever we serialize here is overwritten on load. The
-            // serialized values in batch mode come out as (0,0,0) because there's no screen.
+            // serialized values in batch mode come out as (0,0,0) because there's no screen; this
+            // is expected and the label still renders correctly.
             var canvasGo = new GameObject("PlaceholderCanvas", typeof(RectTransform));
             var canvasRect = canvasGo.GetComponent<RectTransform>();
             canvasRect.localScale = Vector3.one;
@@ -129,21 +121,11 @@ namespace AiAvatarApp.EditorScaffold
             canvasRect.offsetMax = Vector2.zero;
             var canvas = canvasGo.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 100;
             var scaler = canvasGo.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1080, 1920);
+            scaler.matchWidthOrHeight = 0.5f;
             canvasGo.AddComponent<GraphicRaycaster>();
-
-            // Diagnostic full-screen red background. Tests whether Canvas+UGUI renders at all,
-            // independent of Text/Font. If this shows but the label doesn't, it's font-specific.
-            var bgGo = new GameObject("DiagBackground", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-            bgGo.transform.SetParent(canvasGo.transform, false);
-            var bgRect = bgGo.GetComponent<RectTransform>();
-            bgRect.anchorMin = Vector2.zero;
-            bgRect.anchorMax = Vector2.one;
-            bgRect.offsetMin = Vector2.zero;
-            bgRect.offsetMax = Vector2.zero;
-            bgGo.GetComponent<Image>().color = new Color(0.8f, 0.1f, 0.1f, 1f);
 
             var labelGo = new GameObject("ScaffoldLabel", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
             labelGo.transform.SetParent(canvasGo.transform, false);
