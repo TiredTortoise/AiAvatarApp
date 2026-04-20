@@ -1,0 +1,19 @@
+{
+    "name": "AiAvatarApp.Editor.Scaffold",
+    "rootNamespace": "AiAvatarApp.EditorScaffold",
+    "references": [
+        "AiAvatarApp.App",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
