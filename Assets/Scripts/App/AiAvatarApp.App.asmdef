@@ -1,0 +1,28 @@
+{
+    "name": "AiAvatarApp.App",
+    "rootNamespace": "AiAvatarApp.App",
+    "references": [
+        "AiAvatarApp.Common",
+        "AiAvatarApp.Providers",
+        "AiAvatarApp.Providers.Anthropic",
+        "AiAvatarApp.Providers.OpenAI",
+        "AiAvatarApp.Providers.Google",
+        "AiAvatarApp.Providers.Local",
+        "AiAvatarApp.Tts",
+        "AiAvatarApp.Input",
+        "AiAvatarApp.Avatar",
+        "AiAvatarApp.Response",
+        "AiAvatarApp.Settings",
+        "AiAvatarApp.Prompt",
+        "AiAvatarApp.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

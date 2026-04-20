@@ -1,0 +1,16 @@
+{
+    "name": "AiAvatarApp.UI",
+    "rootNamespace": "AiAvatarApp.UI",
+    "references": [
+        "AiAvatarApp.Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

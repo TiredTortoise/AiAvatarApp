@@ -1,0 +1,55 @@
+# Normalize line endings. Unity writes LF; keep it that way across platforms.
+* text=auto eol=lf
+
+# Unity YAML merge — run Unity's smart merge on .meta, .unity, .prefab, .asset
+*.meta     merge=unityyamlmerge eol=lf
+*.unity    merge=unityyamlmerge eol=lf
+*.prefab   merge=unityyamlmerge eol=lf
+*.asset    merge=unityyamlmerge eol=lf
+*.anim     merge=unityyamlmerge eol=lf
+*.controller merge=unityyamlmerge eol=lf
+*.mat      merge=unityyamlmerge eol=lf
+*.physicMaterial merge=unityyamlmerge eol=lf
+
+# Scripts
+*.cs       text diff=csharp eol=lf
+*.asmdef   text eol=lf
+*.json     text eol=lf
+*.md       text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+
+# Binary asset types — never try to merge or diff
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.psd      binary
+*.tga      binary
+*.exr      binary
+*.hdr      binary
+*.tif      binary
+*.tiff     binary
+*.wav      binary
+*.mp3      binary
+*.ogg      binary
+*.fbx      binary
+*.obj      binary
+*.dae      binary
+*.blend    binary
+*.3ds      binary
+*.max      binary
+*.c4d      binary
+*.ma       binary
+*.mb       binary
+*.unitypackage binary
+*.vrm      binary
+*.vrma     binary
+*.apk      binary
+*.aab      binary
+*.dll      binary
+*.so       binary
+*.jar      binary
+
+# Treat large text-ish files as LFS candidates in a future pass
+# (no LFS setup in T1 — flag in README)

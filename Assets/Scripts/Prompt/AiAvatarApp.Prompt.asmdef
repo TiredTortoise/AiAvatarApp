@@ -1,0 +1,17 @@
+{
+    "name": "AiAvatarApp.Prompt",
+    "rootNamespace": "AiAvatarApp.Prompt",
+    "references": [
+        "AiAvatarApp.Common",
+        "AiAvatarApp.Providers"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

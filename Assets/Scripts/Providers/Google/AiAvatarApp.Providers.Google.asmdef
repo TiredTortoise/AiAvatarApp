@@ -1,0 +1,17 @@
+{
+    "name": "AiAvatarApp.Providers.Google",
+    "rootNamespace": "AiAvatarApp.Providers.Google",
+    "references": [
+        "AiAvatarApp.Common",
+        "AiAvatarApp.Providers"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
