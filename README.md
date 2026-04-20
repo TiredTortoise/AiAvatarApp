@@ -21,8 +21,8 @@ Other package versions are in [`Packages/manifest.json`](Packages/manifest.json)
 
 1. Install **Unity Hub**.
 2. In Unity Hub → *Installs* → install **Unity `6000.3.13f1`** with modules: *Android Build Support* (with OpenJDK, Android SDK & NDK, IL2CPP).
-3. *Projects* → *Add* → select this repo folder (`AiAvatarApp/`). Hub should show Unity version `6000.3.13f1`.
-4. Open. First launch resolves UPM packages (UniVRM pulls from GitHub — network required).
+3. *Projects* → *Add* → select the **repo folder** (`AiAvatarApp/`) — not a `.unity` scene file. Hub should show Unity version `6000.3.13f1`.
+4. In Hub's Projects list, click the **project row** to open (double-clicking a scene file from Finder won't attach to this project). First launch resolves UPM packages (UniVRM pulls from GitHub — network required).
 5. Verify the console is clean: zero errors, zero warnings.
 
 ## Run the scaffold
@@ -52,21 +52,21 @@ If you're an AI agent picking up a task (T2+), **read [CONTRIBUTING.md](CONTRIBU
 
 ## CI setup
 
-The CI workflow at [`.github/workflows/ci.yml`](.github/workflows/ci.yml) activates a Unity license and runs EditMode tests + an Android build verification pass. It requires one repo secret:
+The CI workflow at [`.github/workflows/ci.yml`](.github/workflows/ci.yml) activates a Unity license at job start and runs EditMode tests + an Android build verification pass. GameCI activates a **Personal** license on-the-fly from your Unity account email and password — the old `.alf` / `.ulf` manual-activation flow (which `license.unity3d.com/manual` no longer honours for Personal users) is not used here.
 
-- **`UNITY_LICENSE`** — Unity Personal license XML. Generate it locally once:
-  1. On your dev machine, activate Unity in batch mode:
-     ```
-     "/Applications/Unity/Hub/Editor/6000.3.13f1/Unity.app/Contents/MacOS/Unity" \
-       -batchmode -createManualActivationFile -logFile -
-     ```
-     This creates `Unity_v6000.3.13f1.alf`.
-  2. Upload the `.alf` at <https://license.unity3d.com/manual> and download the resulting `.ulf`.
-  3. Copy the full `.ulf` contents and paste into the GitHub repo *Settings → Secrets and variables → Actions → New repository secret* named `UNITY_LICENSE`.
+Add three repo secrets at *Settings → Secrets and variables → Actions → New repository secret*:
 
-**Do not commit the `.alf` or `.ulf` files to git.** The `.gitignore` excludes `*.apikey` and `LocalSecrets/` as a general safety net, but Unity license files should be handled out-of-band.
+| Secret | Required for | Value |
+|---|---|---|
+| `UNITY_EMAIL` | All | Email address of a Unity account with a valid Personal (or Plus/Pro) entitlement |
+| `UNITY_PASSWORD` | All | Password for that account |
+| `UNITY_SERIAL` | Plus/Pro only | Serial key. Leave the secret **unset** (don't create it) for Personal |
 
-On first CI run after adding new asmdefs, the license cache may need refreshing. Re-running the failed job usually suffices; if not, purge the Actions cache for this repo.
+The account used for CI must have the entitlement active — open Unity Hub at least once on any machine with that account signed in so Unity's licensing backend has a record of it.
+
+**Do not commit Unity credentials to git.** The `.gitignore` excludes `*.apikey` and `LocalSecrets/` as a general safety net, but account passwords belong in GitHub Actions secrets, not the repo.
+
+On first CI run after adding new asmdefs, the license-activation step may hiccup. Re-running the failed job usually suffices.
 
 ## Known gaps / follow-ups
 
