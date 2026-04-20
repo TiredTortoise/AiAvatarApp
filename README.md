@@ -74,7 +74,7 @@ The simplest path (since you already have a Personal license activated via Unity
 
 **Do not commit the `.ulf` file to git.** The `.gitignore` excludes `*.apikey` and `LocalSecrets/` as a general safety net, but Unity license files should be handled out-of-band via GitHub Actions secrets.
 
-On first CI run after adding new asmdefs, the license cache may need refreshing. Re-running the failed job usually suffices; if not, purge the Actions cache for this repo.
+On first CI run after adding new asmdefs, the license-activation step may hiccup. Re-running the failed job usually suffices.
 
 ## Known gaps / follow-ups
 
