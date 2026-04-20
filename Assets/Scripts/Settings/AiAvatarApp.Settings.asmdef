@@ -1,0 +1,16 @@
+{
+    "name": "AiAvatarApp.Settings",
+    "rootNamespace": "AiAvatarApp.Settings",
+    "references": [
+        "AiAvatarApp.Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
