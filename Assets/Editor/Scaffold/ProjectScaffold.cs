@@ -107,13 +107,25 @@ namespace AiAvatarApp.EditorScaffold
             var avatarRoot = new GameObject("AvatarRoot");
             avatarRoot.transform.position = Vector3.zero;
 
-            var canvasGo = new GameObject("PlaceholderCanvas",
-                typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-            var canvas = canvasGo.GetComponent<Canvas>();
+            // Construct with typeof(RectTransform) explicitly, then AddComponent<Canvas>() after.
+            // A root ScreenSpaceOverlay Canvas *drives* its RectTransform (scale/anchors) to match
+            // screen size at runtime — so whatever we serialize here is overwritten on load. The
+            // serialized values in batch mode come out as (0,0,0) because there's no screen. This
+            // is expected; the label still renders correctly in a real Editor/device session.
+            var canvasGo = new GameObject("PlaceholderCanvas", typeof(RectTransform));
+            var canvasRect = canvasGo.GetComponent<RectTransform>();
+            canvasRect.localScale = Vector3.one;
+            canvasRect.anchorMin = Vector2.zero;
+            canvasRect.anchorMax = Vector2.one;
+            canvasRect.offsetMin = Vector2.zero;
+            canvasRect.offsetMax = Vector2.zero;
+            var canvas = canvasGo.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            var scaler = canvasGo.GetComponent<CanvasScaler>();
+            var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080, 1920);
+            scaler.matchWidthOrHeight = 0.5f;
+            canvasGo.AddComponent<GraphicRaycaster>();
 
             var labelGo = new GameObject("ScaffoldLabel", typeof(RectTransform), typeof(Text));
             labelGo.transform.SetParent(canvasGo.transform, false);
