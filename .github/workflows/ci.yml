@@ -13,15 +13,12 @@
 #     Purging the `actions-cache` for this repo or rotating the secret resolves it.
 #   - The Unity version is pinned to 6000.3.13f1 to match what developers run
 #     locally. When bumping Unity, update *both* this file AND the README.
-#   - This workflow assumes three repo secrets are configured — see README
-#     section "CI setup" for how to add them:
-#       UNITY_EMAIL        Unity account email (required)
-#       UNITY_PASSWORD     Unity account password (required)
+#   - This workflow assumes one repo secret is configured — see README
+#     section "CI setup" for how to add it:
 #       UNITY_LICENSE      Full contents of Unity_lic.ulf, activated via Hub
-#     GameCI's activation strategy requires email + password alongside EITHER
-#     a UNITY_LICENSE (.ulf for Personal) OR a UNITY_SERIAL (Plus/Pro). The
-#     credentials aren't a substitute for the license file — they authenticate
-#     the Unity account that owns it.
+#     GameCI v4 activates Personal licenses from a .ulf file, not from
+#     email+password. The file is generated on your machine the first time
+#     Unity Hub signs in with a Personal entitlement.
 #   - Cross-reference: design doc Section 14 (testing strategy) and task T26.
 
 name: CI
